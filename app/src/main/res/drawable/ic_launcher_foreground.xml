@@ -1,0 +1,13 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="100"
+    android:viewportHeight="100">
+    <!-- Center the icon and scale it -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M 60,10 L 45,30 L 40,25 L 35,45 C 30,50 25,60 25,75 C 35,80 45,85 55,80 L 50,70 L 60,75 L 55,60 C 65,65 75,60 80,50 L 65,45 C 70,40 75,30 75,20 Z" />
+    <path
+        android:fillColor="#121212"
+        android:pathData="M 60,40 L 65,35 L 70,40 Z" />
+</vector>

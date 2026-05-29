@@ -1,0 +1,6 @@
+{
+  "name": "Spirite X",
+  "description": "A cyberpunk chat screen application",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
