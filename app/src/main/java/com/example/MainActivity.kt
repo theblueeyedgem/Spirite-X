@@ -336,12 +336,43 @@ fun LoginScreen(navController: NavController, viewModel: ChatViewModel) {
                 visualTransformation = PasswordVisualTransformation()
             )
             
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(16.dp))
+            
+            if (!isSignUp) {
+                TextButton(
+                    onClick = {
+                        if (email.isBlank()) {
+                            Toast.makeText(context, "Please enter your email to reset password", Toast.LENGTH_SHORT).show()
+                            return@TextButton
+                        }
+                        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                            Toast.makeText(context, "Please enter a valid email address", Toast.LENGTH_SHORT).show()
+                            return@TextButton
+                        }
+                        FirebaseAuth.getInstance().sendPasswordResetEmail(email)
+                            .addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+                                    Toast.makeText(context, "Password reset link sent to email", Toast.LENGTH_LONG).show()
+                                } else {
+                                    Toast.makeText(context, "Error: ${task.exception?.message}", Toast.LENGTH_LONG).show()
+                                }
+                            }
+                    }
+                ) {
+                    Text("Forgot Password?", color = MaterialTheme.colorScheme.primary)
+                }
+            }
+            
+            Spacer(modifier = Modifier.height(16.dp))
             
             Button(
                 onClick = { 
                     if (email.isBlank() || password.isBlank() || (isSignUp && name.isBlank())) {
                         Toast.makeText(context, "Please fill all fields", Toast.LENGTH_SHORT).show()
+                        return@Button
+                    }
+                    if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                        Toast.makeText(context, "Please enter a valid email address", Toast.LENGTH_SHORT).show()
                         return@Button
                     }
                     isLoading = true
@@ -839,43 +870,61 @@ fun ChatScreen(navController: NavController, viewModel: ChatViewModel, userId: S
 // --- Components ---
 @Composable
 fun ChatListItem(user: User, onClick: () -> Unit) {
-    Row(
+    Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick)
-            .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically
+            .padding(horizontal = 16.dp, vertical = 6.dp)
+            .clickable(onClick = onClick),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
-        ProfileAvatar(user.name, user.profileUrl, user.isOnline, size = 52.dp)
-        Spacer(modifier = Modifier.width(16.dp))
-        Column(modifier = Modifier.weight(1f)) {
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                Text(user.name, fontSize = 16.sp, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onBackground)
-                Text(user.time, fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            ProfileAvatar(user.name, user.profileUrl, user.isOnline, size = 52.dp)
+            Spacer(modifier = Modifier.width(16.dp))
+            Column(modifier = Modifier.weight(1f)) {
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                    Text(user.name, fontSize = 16.sp, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onBackground)
+                    Text(user.time, fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(user.lastMessage, fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1, overflow = TextOverflow.Ellipsis)
             }
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(user.lastMessage, fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1, overflow = TextOverflow.Ellipsis)
         }
     }
 }
 
 @Composable
 fun ContactListItem(user: User, onClick: () -> Unit) {
-    Row(
+    Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick)
-            .padding(horizontal = 16.dp, vertical = 12.dp),
-        verticalAlignment = Alignment.CenterVertically
+            .padding(horizontal = 16.dp, vertical = 6.dp)
+            .clickable(onClick = onClick),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
-        ProfileAvatar(user.name, user.profileUrl, user.isOnline, size = 48.dp)
-        Spacer(modifier = Modifier.width(16.dp))
-        Column(modifier = Modifier.weight(1f)) {
-            Text(user.name, fontSize = 16.sp, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onBackground)
-            Text(user.status, fontSize = 13.sp, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1)
-        }
-        IconButton(onClick = onClick) {
-            Icon(Icons.Default.Email, contentDescription = "Chat", tint = MaterialTheme.colorScheme.primary)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            ProfileAvatar(user.name, user.profileUrl, user.isOnline, size = 48.dp)
+            Spacer(modifier = Modifier.width(16.dp))
+            Column(modifier = Modifier.weight(1f)) {
+                Text(user.name, fontSize = 16.sp, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onBackground)
+                Text(user.status, fontSize = 13.sp, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1)
+            }
+            IconButton(onClick = onClick) {
+                Icon(Icons.Default.Email, contentDescription = "Chat", tint = MaterialTheme.colorScheme.primary)
+            }
         }
     }
 }
