@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "171646901915",
+    "project_id": "spirite-x",
+    "storage_bucket": "spirite-x.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:171646901915:android:ede4a4a483b640cfc6f03e",
+        "android_client_info": {
+          "package_name": "com.aistudio.spiritex.dkmkza"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyArS6vpg_v8yW6U9oQkFvUBPvBsOS5VDF4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
